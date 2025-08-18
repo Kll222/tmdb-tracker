@@ -15,7 +15,7 @@ BASE_URL = 'https://api.themoviedb.org/3'
 # ✅ 优先从环境变量读取 API Key
 API_KEY = os.getenv("TMDB_API_KEY")
 if not API_KEY:
-    raise ValueError("❌ 缺少 TMDB_API_KEY，请在本地 .env 或 GitHub Secrets 配置"))
+    raise ValueError("❌ 缺少 TMDB_API_KEY，请在本地 .env 或 GitHub Secrets 配置")
 
 language_map = {"zh", "ja", "ko", "en", "fr"}
 
