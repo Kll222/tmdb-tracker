@@ -4,9 +4,18 @@ import time
 import os
 import json
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()  # 本地调试时会读取 .env 文件
+except ImportError:
+    pass  # 在 GitHub Actions 不需要安装 dotenv
+
 BASE_URL = 'https://api.themoviedb.org/3'
-with open('api_key.txt', 'r') as f:
-    API_KEY = f.read().strip()
+
+# ✅ 优先从环境变量读取 API Key
+API_KEY = os.getenv("TMDB_API_KEY")
+if not API_KEY:
+    raise ValueError("❌ 缺少 TMDB_API_KEY，请在本地 .env 或 GitHub Secrets 配置"))
 
 language_map = {"zh", "ja", "ko", "en", "fr"}
 
