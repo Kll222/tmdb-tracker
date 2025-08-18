@@ -32,6 +32,7 @@ Thumbs.db
 # ----------------- Sensitive / Local Data -----------------
 # API key 文件
 api_key.txt
+.env
 
 # 数据库文件
 database/
