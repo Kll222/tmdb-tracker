@@ -20,3 +20,8 @@ jobs:
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
         run: python main.py
+      - name: Upload output
+        uses: actions/upload-artifact@v3
+        with:
+          name: tmdb-json
+          path: output/output.json
