@@ -41,3 +41,4 @@ jobs:
         # 如果你想直接用 HTTPS 方式 push，需要设置 GitHub Token
         # GitHub 默认提供 GITHUB_TOKEN，无需额外创建
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
