@@ -24,6 +24,8 @@ jobs:
 
       - name: Run script
         run: python main.py
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
 
       # 🔑 认证 Google Cloud
       - name: Authenticate to Google Cloud
