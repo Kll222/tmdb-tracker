@@ -37,6 +37,3 @@ api_key.txt
 # 数据库文件
 database/
 media_data.db
-
-# 输出 JSON
-output/
