@@ -1,5 +1,15 @@
 [
   {
+    "id": 1532913,
+    "title": "危情风云",
+    "release_date": "2025-08-20",
+    "region": "中国",
+    "genres": "动作, 犯罪",
+    "overview": "K国边境势力复杂，常年激战，警察松少的战友在任务中为救松少而身负重伤昏迷不醒，松少的妻子也因组织任务受牵连遇害，为护唯一的女儿周全，松少选择退役隐姓埋名，同时暗地寻找仇人踪迹为报仇雪恨。终于在一次女儿也被卷入的绑架案中，仇人露出行踪，一场血战拉开帷幕......",
+    "poster_url": "https://image.tmdb.org/t/p/w500/AsHQuASjZvlqmx1K2pQ8WEChDgX.jpg",
+    "media_type": "movie"
+  },
+  {
     "id": 1532831,
     "title": "Duvet",
     "release_date": "2025-08-20",
@@ -152,7 +162,7 @@
   {
     "id": 507244,
     "title": "Afterburn",
-    "release_date": "2025-08-21",
+    "release_date": "2025-08-20",
     "region": "美国",
     "genres": "科幻, 动作, 喜剧",
     "overview": "Set against the backdrop of a postapocalyptic Earth whose Eastern Hemisphere was destroyed by a massive solar flare, leaving what life remains mutated from radiation and fallout. The story revolves around a group of treasure hunters who extract such objects as the Mona Lisa, the Rosetta Stone and the Crown Jewels while facing rival hunters, mutants and pirates.",
@@ -281,7 +291,7 @@
   },
   {
     "id": 1312946,
-    "title": "一路走向你",
+    "title": "通往你的地图",
     "release_date": "2025-08-19",
     "region": "美国",
     "genres": "爱情, 剧情",
