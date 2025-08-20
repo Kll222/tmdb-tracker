@@ -2,42 +2,49 @@ name: TMDB Tracker Automation
 
 on:
   schedule:
-    - cron: "0 2,14 * * *"  # 每天 02:00 和 14:00 UTC 自动运行
+    - cron: "0 2,14 * * *"  # UTC 时间，每天 02:00 和 14:00
   workflow_dispatch:         # 允许手动触发
-  
+
 permissions:
   contents: write
-  
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ 检出仓库
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 2️⃣ 设置 Python
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
+      # 3️⃣ 安装依赖
       - name: Install dependencies
         run: |
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Run script
+      # 4️⃣ 运行主程序
+      - name: Run main.py
         run: python main.py
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
-          
+
+      # 5️⃣ 移动 output.json 到仓库根目录
+      - name: Move JSON to root
+        run: |
+          mkdir -p temp_output
+          mv output/output.json temp_output/output.json
+          rm -rf output
+          mv temp_output/* ./
+
+      # 6️⃣ 部署到 GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./output
-          
-      - name: Upload output
-        uses: actions/upload-artifact@v4
-        with:
-          name: tmdb-output
-          path: output/output.json
+          publish_dir: .
