@@ -1,50 +1,53 @@
 name: TMDB Tracker Automation
 
+# 触发条件
 on:
   schedule:
-    - cron: "0 2,14 * * *"  # UTC 时间，每天 02:00 和 14:00
+    - cron: "0 2,14 * * *"  # 每天 02:00 和 14:00 UTC
   workflow_dispatch:         # 允许手动触发
 
+# 权限
 permissions:
   contents: write
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ 检出仓库
+      # 1. 获取仓库内容
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2️⃣ 设置 Python
+      # 2. 设置 Python
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      # 3️⃣ 安装依赖
+      # 3. 安装依赖
       - name: Install dependencies
         run: |
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      # 4️⃣ 运行主程序
-      - name: Run main.py
+      # 4. 运行主脚本生成 output.json
+      - name: Run TMDB script
         run: python main.py
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
 
-      # 5️⃣ 移动 output.json 到仓库根目录
-      - name: Move JSON to root
-        run: |
-          mkdir -p temp_output
-          mv output/output.json temp_output/output.json
-          rm -rf output
-          mv temp_output/* ./
-
-      # 6️⃣ 部署到 GitHub Pages
-      - name: Deploy to GitHub Pages
+      # 5. 部署 output 文件夹到 gh-pages
+      - name: Deploy output to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
+          publish_dir: ./output      # 只上传 output 文件夹
+          destination_dir: ./        # 上传到 gh-pages 根目录
+          keep_files: false          # 清空 gh-pages 旧文件
+
+      # 6. 上传 output.json 作为 workflow artifact（可选）
+      - name: Upload output artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tmdb-output
+          path: output/output.json
