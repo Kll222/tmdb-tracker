@@ -26,20 +26,13 @@ jobs:
         run: python main.py
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
-
-      # 🔑 认证 Google Cloud
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
+          
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
-
-      # ☁️ 上传 JSON 到 GCS
-      - name: Upload to Google Cloud Storage
-        uses: google-github-actions/upload-cloud-storage@v2
-        with:
-          path: output/output.json      # 本地要上传的文件
-          destination: tmdb-tracker # 你的 GCS bucket 名
-
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./output
+          
       - name: Upload output
         uses: actions/upload-artifact@v4
         with:
