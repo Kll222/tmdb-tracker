@@ -400,6 +400,26 @@
     "media_type": "tv"
   },
   {
+    "id": 295028,
+    "title": "姐姐妹妹抓娃娃",
+    "release_date": "2025-08-19",
+    "region": "中国",
+    "genres": "真人秀",
+    "overview": "《姐姐妹妹抓娃娃》作为一档新概念全女冒险真人秀，以“全女冒险+文化出海+真实成长”为核心理念，集结五位女推团成员戚薇、李一桐、李雪琴、田曦薇、张艺凡共同组成宇宙最强抓手团，前往奇幻国度-土耳其，开启一场融合极限挑战、文化探索与自我突破的冒险之旅。",
+    "poster_url": "https://image.tmdb.org/t/p/w500/hl7oUKaWbramVidIY1KmxI7kSs3.jpg",
+    "media_type": "tv"
+  },
+  {
+    "id": 279942,
+    "title": "美国之队：赌徒老板与达拉斯牛仔",
+    "release_date": "2025-08-19",
+    "region": "美国",
+    "genres": "纪录片",
+    "overview": "从三次超级碗夺冠到一系列争议，这部纪录片剧集再现了90 年代达拉斯牛仔王朝的狂野历程。",
+    "poster_url": "https://image.tmdb.org/t/p/w500/oD4oBdMVnPiqboFeH92KUyyv2Wy.jpg",
+    "media_type": "tv"
+  },
+  {
     "id": 298055,
     "title": "A Different Breed",
     "release_date": "2025-08-18",
