@@ -4,7 +4,10 @@ on:
   schedule:
     - cron: "0 2,14 * * *"  # 每天 02:00 和 14:00 UTC 自动运行
   workflow_dispatch:         # 允许手动触发
-
+  
+permissions:
+  contents: write
+  
 jobs:
   build:
     runs-on: ubuntu-latest
