@@ -1,12 +1,10 @@
 name: TMDB Tracker Automation
 
-# 触发条件
 on:
   schedule:
     - cron: "0 2,14 * * *"  # 每天 02:00 和 14:00 UTC
   workflow_dispatch:         # 允许手动触发
 
-# 权限
 permissions:
   contents: write
 
@@ -36,16 +34,24 @@ jobs:
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
 
-      # 5. 部署 output 文件夹到 gh-pages
+      # 5. 检查输出文件是否存在
+      - name: Check output
+        run: |
+          echo "Listing output folder:"
+          ls -R output
+          echo "Show output.json content (first 500 chars):"
+          head -c 500 output/output.json
+
+      # 6. 部署 output 文件夹到 gh-pages
       - name: Deploy output to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./output      # 只上传 output 文件夹
-          destination_dir: .         # 上传到 gh-pages 根目录
-          keep_files: false          # 每次清空旧文件，只保留最新 output.json
+          publish_dir: ./output      # 上传 output 文件夹
+          destination_dir: .         # 放到 gh-pages 根目录
+          keep_files: false          # 清空旧文件
 
-      # 6. 上传 output.json 作为 workflow artifact（可选）
+      # 7. 上传 output.json 作为 workflow artifact（可选）
       - name: Upload output artifact
         uses: actions/upload-artifact@v4
         with:
