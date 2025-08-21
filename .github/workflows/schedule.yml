@@ -42,8 +42,8 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./output      # 只上传 output 文件夹
-          destination_dir: ./        # 上传到 gh-pages 根目录
-          keep_files: false          # 清空 gh-pages 旧文件
+          destination_dir: .         # 上传到 gh-pages 根目录
+          keep_files: false          # 每次清空旧文件，只保留最新 output.json
 
       # 6. 上传 output.json 作为 workflow artifact（可选）
       - name: Upload output artifact
