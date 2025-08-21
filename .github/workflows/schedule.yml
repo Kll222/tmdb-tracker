@@ -6,14 +6,16 @@ on:
   workflow_dispatch:         # 允许手动触发
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. 获取仓库内容
+      # 1. Checkout 仓库
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -28,7 +30,7 @@ jobs:
         run: |
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      # 4. 运行主脚本生成 output.json
+      # 4. 运行 TMDB 脚本生成 output.json
       - name: Run TMDB script
         run: python main.py
         env:
@@ -42,18 +44,12 @@ jobs:
           echo "Show output.json content (first 500 chars):"
           head -c 500 output/output.json
 
-      # 6. 部署 output 文件夹到 gh-pages
-      - name: Deploy output to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      # 6. 上传 artifact 给 GitHub Pages
+      - name: Upload artifact for GitHub Pages
+        uses: actions/upload-pages-artifact@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./output      # 上传 output 文件夹
-          destination_dir: .         # 放到 gh-pages 根目录
-          keep_files: false          # 清空旧文件
+          path: output/
 
-      # 7. 上传 output.json 作为 workflow artifact（可选）
-      - name: Upload output artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: tmdb-output
-          path: output/output.json
+      # 7. 部署到 GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1
