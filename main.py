@@ -1,7 +1,6 @@
 import requests
 from datetime import datetime, timedelta
 import time
-import os
 import json
 
 try:
@@ -143,8 +142,7 @@ def main():
                 break
 
     # 导出 JSON
-    os.makedirs('output', exist_ok=True)
-    with open('output/output.json', 'w', encoding='utf-8') as t:
+    with open('output.json', 'w', encoding='utf-8') as t:
         json.dump(all_data, t, ensure_ascii=False, indent=2)
 
 if __name__ == '__main__':
