@@ -1,22 +1,25 @@
 const CACHE_NAME = 'tmdb-cache-v1';
-const urlsToCache = [
-  './index.html',
-  './output.json',
-  './manifest.json'
-];
 
 self.addEventListener('install', event => {
+  self.skipWaiting(); // 强制激活新版本
+});
+
+self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(urlsToCache);
-    })
+    caches.keys().then(keys => Promise.all(
+      keys.map(key => caches.delete(key)) // 删除旧缓存
+    ))
   );
 });
 
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request);
-    })
+    fetch(event.request) // 先从网络获取
+      .then(response => {
+        const resClone = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, resClone));
+        return response;
+      })
+      .catch(() => caches.match(event.request)) // 网络失败才用缓存
   );
 });
