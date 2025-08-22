@@ -229,12 +229,16 @@
 
     // 注册 Service Worker（离线缓存，可选）
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js')
-        .then(() => console.log('Service Worker 注册成功'))
-        .catch(() => console.log('Service Worker 注册失败'));
-    }
+  navigator.serviceWorker.register('./sw.js')
+    .then(reg => {
+      console.log('Service Worker 注册成功');
+      reg.update(); // 每次访问页面尝试更新 SW
+    })
+    .catch(err => console.log('Service Worker 注册失败', err));
+}
   </script>
 </body>
 </html>
+
 
 
