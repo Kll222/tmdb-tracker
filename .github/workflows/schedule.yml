@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout 仓库
+      # 1. 获取仓库内容
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -36,19 +36,18 @@ jobs:
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
 
-      # 5. 检查输出文件是否存在
+      # 5. 检查输出文件
       - name: Check output
         run: |
-          echo "Listing output folder:"
-          ls -R output
-          echo "Show output.json content (first 500 chars):"
+          ls -R
+          echo "Show first 500 chars of output.json:"
           head -c 500 output/output.json
 
-      # 6. 上传 artifact 给 GitHub Pages
+      # 6. 上传整个仓库作为 GitHub Pages artifact
       - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: output/
+          path: ./    # 注意这里是整个仓库根目录，包括 index.html 和 output/
 
       # 7. 部署到 GitHub Pages
       - name: Deploy to GitHub Pages
