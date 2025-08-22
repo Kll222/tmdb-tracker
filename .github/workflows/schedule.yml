@@ -41,7 +41,7 @@ jobs:
         run: |
           ls -R
           echo "Show first 500 chars of output.json:"
-          head -c 500 output/output.json
+          head -c 500 output.json
 
       # 6. 上传整个仓库作为 GitHub Pages artifact
       - name: Upload artifact for GitHub Pages
