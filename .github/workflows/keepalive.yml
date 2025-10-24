@@ -2,20 +2,24 @@ name: Keep GitHub Actions Alive
 
 on:
   schedule:
-    - cron: "0 0 1 * *"  # 每月1日 00:00 UTC 自动运行
-  workflow_dispatch:      # 允许手动触发
+    - cron: "0 0 1 * *"  # 每月1号 00:00 UTC 自动运行
+  workflow_dispatch:      # 手动触发
+
+permissions:
+  contents: write         # ✅ 允许推送代码
 
 jobs:
   keepalive:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Create keepalive commit
+
+      - name: Keep workflow alive
         run: |
           date > .keepalive
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add .keepalive
           git commit -m "chore: keepalive $(date)" || echo "Nothing to commit"
-          git push
+          git push origin HEAD:main
