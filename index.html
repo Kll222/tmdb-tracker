@@ -3,16 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <title>影视信息跟踪</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#333333">
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f5f5f5;
       margin: 0;
       padding: 0;
-      font-size: 16px;
     }
     header {
       background: #333;
@@ -25,9 +21,9 @@
     }
     #movie-list {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 15px;
-      padding: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+      padding: 20px;
     }
     .card {
       background: white;
@@ -35,6 +31,7 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
       overflow: hidden;
       text-align: center;
+      cursor: pointer;
       transition: transform 0.2s;
     }
     .card:hover {
@@ -46,17 +43,12 @@
     }
     .card h2 {
       font-size: 16px;
-      margin: 5px 0;
+      margin: 8px 0;
     }
     .card p {
-      font-size: 12px;
+      font-size: 13px;
       color: #555;
-      padding: 0 5px 5px;
-    }
-     @media (max-width: 400px) {
-      body {
-        font-size: 14px;
-      }
+      margin-bottom: 10px;
     }
     /* 分页按钮 */
     #pagination {
@@ -117,7 +109,7 @@
 </head>
 <body>
   <header>
-    <h1>🎬 我的电影库</h1>
+    <h1>🎬 我的电影库</h1><a href="favorites.html" style="color:white;text-decoration:none;">查看收藏</a>
   </header>
 
   <section id="movie-list"></section>
@@ -143,6 +135,27 @@
     let currentPage = 1;
     const perPage = 12; // 每页 12 部
 
+    // localStorage 收藏功能
+    function getFavorites() {
+      const fav = localStorage.getItem('favorites');
+      return fav ? JSON.parse(fav) : [];
+    }
+    function saveFavorites(favs) {
+        localStorage.setItem('favorites', JSON.stringify(favs));
+    }
+    function isFavorite(id) {
+        return getFavorites().some(f => f.id === id);
+    }
+    function toggleFavorite(movie) {
+        let favs = getFavorites();
+        if (isFavorite(movie.id)) {
+            favs = favs.filter(f => f.id !== movie.id);
+        } else {
+            favs.push(movie);
+        }
+        saveFavorites(favs);
+    }
+
     // 渲染电影卡片
     function renderMovies() {
       const movieList = document.getElementById('movie-list');
@@ -155,17 +168,19 @@
       pageMovies.forEach(movie => {
         const card = document.createElement('div');
         card.className = 'card';
+        const favText = isFavorite(movie.id) ? "❤️ 已收藏" : "🤍 收藏";
         card.innerHTML = `
           <img src="${movie.poster_url}" alt="海报">
           <h2>${movie.title}</h2>
           <p>${movie.region}</p>
-          <button class="fav-btn">${isFavorited(movie.id) ? '❤️ 已收藏' : '🤍 收藏'}</button>
+          <button class="fav-btn">${favText}</button>
         `;
-        card.querySelector('.fav-btn').onclick = (e) => {
-          e.stopPropagation(); // 阻止触发          card.onclick
-          toggleFavorite(movie.id, e.target);
-        };
         card.onclick = () => showModal(movie);
+        card.querySelector('.fav-btn').onclick = e=>{
+            e.stopPropagation();
+            toggleFavorite(movie);
+            card.querySelector('.fav-btn').textContent = isFavorite(movie.id) ? "❤️ 已收藏" : "🤍 收藏";
+        };
         movieList.appendChild(card);
       });
 
@@ -198,25 +213,6 @@
       pagination.appendChild(nextBtn);
     }
 
-     // 判断是否收藏
-     function isFavorited(id) {
-      const favs = JSON.parse(localStorage.getItem('favorites') || '[]');
-      return favs.includes(id);
-     }
-
-     // 切换收藏
-     function toggleFavorite(id, btn) {
-      let favs = JSON.parse(localStorage.getItem('favorites') || '[]');
-     if (favs.includes(id)) {
-      favs = favs.filter(fid => fid !== id);
-      btn.textContent = '🤍 收藏';
-     } else {
-      favs.push(id);
-      btn.textContent = '❤️ 已收藏';
-  }
-     localStorage.setItem('favorites', JSON.stringify(favs));
-}
-
     // 显示详情 Modal
     function showModal(movie) {
       document.getElementById('modal-poster').src = movie.poster_url;
@@ -226,6 +222,13 @@
       document.getElementById('modal-genres').textContent = "类型：" + movie.genres;
       document.getElementById('modal-overview').textContent = "简介：" + movie.overview;
 
+      const favBtn = document.getElementById('modal-fav-btn');
+      favBtn.textContent = isFavorite(movie.id) ? "❤️ 已收藏" : "🤍 收藏";
+      favBtn.onclick = ()=>{
+          toggleFavorite(movie);
+          favBtn.textContent = isFavorite(movie.id) ? "❤️ 已收藏" : "🤍 收藏";
+          renderMovies();
+      };
       document.getElementById('modal').style.display = "flex";
     }
 
@@ -250,19 +253,6 @@
         console.error("加载 JSON 失败:", err);
         document.getElementById('movie-list').innerHTML = "<p>无法加载电影数据</p>";
       });
-
-    // 注册 Service Worker（离线缓存，可选）
-    if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js')
-    .then(reg => {
-      console.log('Service Worker 注册成功');
-      reg.update(); // 每次访问页面尝试更新 SW
-    })
-    .catch(err => console.log('Service Worker 注册失败', err));
-}
   </script>
 </body>
 </html>
-
-
-
