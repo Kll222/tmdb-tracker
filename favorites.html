@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>收藏影视</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            font-size: 16px;
+        }
+
+        header {
+            background: #333;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        #movie-list {
+            display: grid;
+            grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            padding: 10px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card img {
+            width: 100%;
+            height: auto;
+        }
+
+        .card h2 {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        .card p {
+            font-size: 12px;
+            color: #555;
+            padding: 0 5px 5px;
+        }
+
+        button {
+            margin: 5px;
+            padding: 5px 10px;
+            border: none;
+            background: #333;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<header><h1>❤️ 我的收藏</h1><a href="index.html" style="color:white;text-decoration:none;">返回首页</a></header>
+<section id="movie-list"></section>
+
+<script>
+    function renderFavorites() {
+        const movies = JSON.parse(localStorage.getItem('favorites') || '[]');
+        const container = document.getElementById('movie-list');
+        container.innerHTML = "";
+        movies.forEach(movie => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+      <img src="${movie.poster_url}" alt="海报">
+      <h2>${movie.title}</h2>
+      <p>${movie.region}</p>
+      <button class="remove-btn">取消收藏</button>
+    `;
+            card.querySelector('.remove-btn').onclick = () => {
+                const idx = movies.findIndex(m => m.id === movie.id);
+                if (idx !== -1) {
+                    movies.splice(idx, 1);
+                    localStorage.setItem('favorites', JSON.stringify(movies));
+                    renderFavorites();
+                }
+            };
+            container.appendChild(card);
+        });
+    }
+
+    renderFavorites();
+</script>
+</body>
+</html>
