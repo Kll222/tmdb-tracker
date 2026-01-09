@@ -159,7 +159,12 @@
           <img src="${movie.poster_url}" alt="海报">
           <h2>${movie.title}</h2>
           <p>${movie.region}</p>
+          <button class="fav-btn">${isFavorited(movie.id) ? '❤️ 已收藏' : '🤍 收藏'}</button>
         `;
+        card.querySelector('.fav-btn').onclick = (e) => {
+          e.stopPropagation(); // 阻止触发          card.onclick
+          toggleFavorite(movie.id, e.target);
+        };
         card.onclick = () => showModal(movie);
         movieList.appendChild(card);
       });
@@ -192,6 +197,25 @@
       };
       pagination.appendChild(nextBtn);
     }
+
+     // 判断是否收藏
+     function isFavorited(id) {
+      const favs = JSON.parse(localStorage.getItem('favorites') || '[]');
+      return favs.includes(id);
+     }
+
+     // 切换收藏
+     function toggleFavorite(id, btn) {
+      let favs = JSON.parse(localStorage.getItem('favorites') || '[]');
+     if (favs.includes(id)) {
+      favs = favs.filter(fid => fid !== id);
+      btn.textContent = '🤍 收藏';
+     } else {
+      favs.push(id);
+      btn.textContent = '❤️ 已收藏';
+  }
+     localStorage.setItem('favorites', JSON.stringify(favs));
+}
 
     // 显示详情 Modal
     function showModal(movie) {
