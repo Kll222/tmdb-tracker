@@ -2,258 +2,163 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>影视信息跟踪</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background: #333;
-      color: white;
-      padding: 15px;
-      text-align: center;
-    }
-    h1 {
-      margin: 0;
-    }
-    #movie-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 10px;
-      padding: 10px;
-    }
-    .card {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-      overflow: hidden;
-      text-align: center;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-    .card:hover {
-      transform: scale(1.05);
-    }
-    .card img {
-      width: 100%;
-      height: auto;
-    }
-    .card h2 {
-      font-size: 16px;
-      margin: 8px 0;
-    }
-    .card p {
-      font-size: 13px;
-      color: #555;
-      margin-bottom: 10px;
-    }
-    /* 分页按钮 */
-    #pagination {
-      text-align: center;
-      margin: 20px;
-    }
-    #pagination button {
-      margin: 0 5px;
-      padding: 8px 12px;
-      border: none;
-      background: #333;
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    #pagination button:disabled {
-      background: #aaa;
-      cursor: default;
-    }
-    /* 弹出详情 Modal */
-    #modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      justify-content: center;
-      align-items: center;
-    }
-    #modal-content {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      max-width: 500px;
-      width: 90%;
-      text-align: center;
-      position: relative;
-    }
-    #modal-content img {
-      width: 200px;
-      border-radius: 6px;
-    }
-    #modal-content h2 {
-      margin: 15px 0 10px;
-    }
-    #modal-content p {
-      margin: 5px 0;
-      color: #444;
-    }
-    #close-btn {
-      position: absolute;
-      top: 10px; right: 15px;
-      font-size: 20px;
-      cursor: pointer;
-      color: #333;
-    }
+    body { font-family: Arial; background: #f5f5f5; margin:0; padding:0; }
+    header { background:#333; color:white; padding:15px; text-align:center; }
+    h1 { margin:0; }
+    header a { color:white; text-decoration:none; margin-left:20px; }
+    #movie-list { display:grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap:15px; padding:10px; }
+    .card { background:white; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.2); overflow:hidden; text-align:center; cursor:pointer; transition: transform 0.2s; }
+    .card:hover { transform:scale(1.05); }
+    .card img { width:100%; height:auto; }
+    .card h2 { font-size:16px; margin:5px 0; }
+    .card p { font-size:12px; color:#555; margin:0 0 5px; }
+    .card button { margin-bottom:5px; }
+    #pagination { text-align:center; margin:20px; }
+    #pagination button { margin:0 5px; padding:8px 12px; border:none; background:#333; color:white; border-radius:4px; cursor:pointer; }
+    #pagination button:disabled { background:#aaa; cursor:default; }
+    #modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; }
+    #modal-content { background:white; padding:20px; border-radius:8px; max-width:500px; width:90%; text-align:center; position:relative; }
+    #modal-content img { width:200px; border-radius:6px; }
+    #modal-content h2 { margin:15px 0 10px; }
+    #modal-content p { margin:5px 0; color:#444; }
+    #close-btn { position:absolute; top:10px; right:15px; font-size:20px; cursor:pointer; color:#333; }
+    #modal-fav-btn { margin-top:10px; padding:5px 10px; background:#333; color:white; border:none; border-radius:4px; cursor:pointer; }
   </style>
 </head>
 <body>
-  <header>
-    <h1>🎬 我的电影库</h1><a href="favorites.html" style="color:white;text-decoration:none;">查看收藏</a>
-  </header>
+<header>
+  <h1>🎬 我的电影库</h1>
+  <a href="favorites.html">查看收藏</a>
+</header>
 
-  <section id="movie-list"></section>
+<section id="movie-list"></section>
+<div id="pagination"></div>
 
-  <!-- 分页 -->
-  <div id="pagination"></div>
-
-  <!-- 详情 Modal -->
-  <div id="modal">
-    <div id="modal-content">
-      <span id="close-btn">&times;</span>
-      <img id="modal-poster" src="" alt="海报">
-      <h2 id="modal-title"></h2>
-      <p id="modal-date"></p>
-      <p id="modal-region"></p>
-      <p id="modal-genres"></p>
-      <p id="modal-overview"></p>
-    </div>
+<!-- 详情 Modal -->
+<div id="modal">
+  <div id="modal-content">
+    <span id="close-btn">&times;</span>
+    <img id="modal-poster" src="" alt="海报">
+    <h2 id="modal-title"></h2>
+    <p id="modal-date"></p>
+    <p id="modal-region"></p>
+    <p id="modal-genres"></p>
+    <p id="modal-overview"></p>
+    <button id="modal-fav-btn">🤍 收藏</button>
   </div>
+</div>
 
-  <script>
-    let movies = [];
-    let currentPage = 1;
-    const perPage = 12; // 每页 12 部
+<script>
+let movies = [];
+let currentPage = 1;
+const perPage = 12;
 
-    // localStorage 收藏功能
-    function getFavorites() {
-      const fav = localStorage.getItem('favorites');
-      return fav ? JSON.parse(fav) : [];
-    }
-    function saveFavorites(favs) {
-        localStorage.setItem('favorites', JSON.stringify(favs));
-    }
-    function isFavorite(id) {
-        return getFavorites().some(f => f.id === id);
-    }
-    function toggleFavorite(movie) {
-        let favs = getFavorites();
-        if (isFavorite(movie.id)) {
-            favs = favs.filter(f => f.id !== movie.id);
-        } else {
-            favs.push(movie);
-        }
-        saveFavorites(favs);
-    }
+// --------- localStorage 收藏 ----------
+function getFavorites() {
+  const fav = localStorage.getItem('favorites');
+  return fav ? JSON.parse(fav) : [];
+}
+function saveFavorites(favs) {
+  localStorage.setItem('favorites', JSON.stringify(favs));
+}
+function isFavorite(id) {
+  return getFavorites().some(f => f.id === id);
+}
+function toggleFavorite(movie) {
+  let favs = getFavorites();
+  if(isFavorite(movie.id)){
+    favs = favs.filter(f=>f.id!==movie.id);
+  } else {
+    favs.push(movie);
+  }
+  saveFavorites(favs);
+}
 
-    // 渲染电影卡片
-    function renderMovies() {
-      const movieList = document.getElementById('movie-list');
-      movieList.innerHTML = "";
+// --------- 渲染电影 ----------
+function renderMovies() {
+  const movieList = document.getElementById('movie-list');
+  movieList.innerHTML = "";
 
-      const start = (currentPage - 1) * perPage;
-      const end = start + perPage;
-      const pageMovies = movies.slice(start, end);
+  const start = (currentPage-1)*perPage;
+  const end = start+perPage;
+  const pageMovies = movies.slice(start,end);
 
-      pageMovies.forEach(movie => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        const favText = isFavorite(movie.id) ? "❤️ 已收藏" : "🤍 收藏";
-        card.innerHTML = `
-          <img src="${movie.poster_url}" alt="海报">
-          <h2>${movie.title}</h2>
-          <p>${movie.region}</p>
-          <button class="fav-btn">${favText}</button>
-        `;
-        card.onclick = () => showModal(movie);
-        card.querySelector('.fav-btn').onclick = e=>{
-            e.stopPropagation();
-            toggleFavorite(movie);
-            card.querySelector('.fav-btn').textContent = isFavorite(movie.id) ? "❤️ 已收藏" : "🤍 收藏";
-        };
-        movieList.appendChild(card);
-      });
-
-      renderPagination();
-    }
-
-    // 渲染分页按钮
-    function renderPagination() {
-      const pagination = document.getElementById('pagination');
-      pagination.innerHTML = "";
-
-      const totalPages = Math.ceil(movies.length / perPage);
-
-      const prevBtn = document.createElement('button');
-      prevBtn.textContent = "上一页";
-      prevBtn.disabled = currentPage === 1;
-      prevBtn.onclick = () => {
-        currentPage--;
-        renderMovies();
-      };
-      pagination.appendChild(prevBtn);
-
-      const nextBtn = document.createElement('button');
-      nextBtn.textContent = "下一页";
-      nextBtn.disabled = currentPage === totalPages;
-      nextBtn.onclick = () => {
-        currentPage++;
-        renderMovies();
-      };
-      pagination.appendChild(nextBtn);
-    }
-
-    // 显示详情 Modal
-    function showModal(movie) {
-      document.getElementById('modal-poster').src = movie.poster_url;
-      document.getElementById('modal-title').textContent = movie.title;
-      document.getElementById('modal-date').textContent = "上映日期：" + movie.release_date;
-      document.getElementById('modal-region').textContent = "地区：" + movie.region;
-      document.getElementById('modal-genres').textContent = "类型：" + movie.genres;
-      document.getElementById('modal-overview').textContent = "简介：" + movie.overview;
-
-      const favBtn = document.getElementById('modal-fav-btn');
-      favBtn.textContent = isFavorite(movie.id) ? "❤️ 已收藏" : "🤍 收藏";
-      favBtn.onclick = ()=>{
-          toggleFavorite(movie);
-          favBtn.textContent = isFavorite(movie.id) ? "❤️ 已收藏" : "🤍 收藏";
-          renderMovies();
-      };
-      document.getElementById('modal').style.display = "flex";
-    }
-
-    // 关闭 Modal
-    document.getElementById('close-btn').onclick = () => {
-      document.getElementById('modal').style.display = "none";
+  pageMovies.forEach(movie=>{
+    const card = document.createElement('div');
+    card.className='card';
+    const favText = isFavorite(movie.id) ? "❤️ 已收藏":"🤍 收藏";
+    card.innerHTML = `
+      <img src="${movie.poster_url}" alt="海报">
+      <h2>${movie.title}</h2>
+      <p>${movie.region}</p>
+      <button class="fav-btn">${favText}</button>
+    `;
+    card.onclick = ()=>showModal(movie);
+    card.querySelector('.fav-btn').onclick = e=>{
+      e.stopPropagation();
+      toggleFavorite(movie);
+      card.querySelector('.fav-btn').textContent = isFavorite(movie.id) ? "❤️ 已收藏":"🤍 收藏";
     };
-    window.onclick = (event) => {
-      if (event.target.id === "modal") {
-        document.getElementById('modal').style.display = "none";
-      }
-    };
+    movieList.appendChild(card);
+  });
 
-    // 加载 JSON 数据
-    fetch('output.json')
-      .then(res => res.json())
-      .then(data => {
-        movies = data;
-        renderMovies();
-      })
-      .catch(err => {
-        console.error("加载 JSON 失败:", err);
-        document.getElementById('movie-list').innerHTML = "<p>无法加载电影数据</p>";
-      });
-  </script>
+  renderPagination();
+}
+
+// --------- 分页 ----------
+function renderPagination() {
+  const pagination = document.getElementById('pagination');
+  pagination.innerHTML="";
+  const totalPages = Math.ceil(movies.length/perPage);
+
+  const prevBtn=document.createElement('button');
+  prevBtn.textContent="上一页";
+  prevBtn.disabled = currentPage===1;
+  prevBtn.onclick=()=>{ currentPage--; renderMovies(); };
+  pagination.appendChild(prevBtn);
+
+  const nextBtn=document.createElement('button');
+  nextBtn.textContent="下一页";
+  nextBtn.disabled = currentPage===totalPages;
+  nextBtn.onclick=()=>{ currentPage++; renderMovies(); };
+  pagination.appendChild(nextBtn);
+}
+
+// --------- Modal ----------
+function showModal(movie){
+  document.getElementById('modal-poster').src=movie.poster_url;
+  document.getElementById('modal-title').textContent=movie.title;
+  document.getElementById('modal-date').textContent="上映日期："+movie.release_date;
+  document.getElementById('modal-region').textContent="地区："+movie.region;
+  document.getElementById('modal-genres').textContent="类型："+movie.genres;
+  document.getElementById('modal-overview').textContent="简介："+movie.overview;
+
+  const favBtn = document.getElementById('modal-fav-btn');
+  favBtn.textContent = isFavorite(movie.id) ? "❤️ 已收藏":"🤍 收藏";
+  favBtn.onclick = ()=>{
+    toggleFavorite(movie);
+    favBtn.textContent = isFavorite(movie.id) ? "❤️ 已收藏":"🤍 收藏";
+    renderMovies();
+  };
+
+  document.getElementById('modal').style.display="flex";
+}
+
+// --------- 关闭 Modal ----------
+document.getElementById('close-btn').onclick = ()=>document.getElementById('modal').style.display="none";
+window.onclick = (event)=>{ if(event.target.id==="modal"){ document.getElementById('modal').style.display="none"; } };
+
+// --------- 加载 JSON ----------
+fetch('output.json')
+  .then(res=>res.json())
+  .then(data=>{ movies=data; renderMovies(); })
+  .catch(err=>{
+    console.error("加载 JSON 失败:", err);
+    document.getElementById('movie-list').innerHTML="<p>无法加载电影数据</p>";
+  });
+</script>
 </body>
 </html>
