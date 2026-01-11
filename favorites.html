@@ -62,9 +62,19 @@ function getFavorites(){ const fav = localStorage.getItem('favorites'); return f
 function saveFavorites(favs){ localStorage.setItem('favorites',JSON.stringify(favs)); }
 function isFavorite(id){ return getFavorites().some(f=>f.id===id); }
 function toggleFavorite(movie){ 
-  let favs=getFavorites(); 
+  let favs=getFavorites()
+    .map(f => ({
+      ...f,
+      fav_time: f.fav_time || 0
+    }))
+    .sort((a, b) => b.fav_time - a.fav_time); 
   if(isFavorite(movie.id)){ favs=favs.filter(f=>f.id!==movie.id); } 
-  else{ favs.push(movie); } 
+  else{
+  favs.push({
+    ...movie,
+    fav_time: Date.now()
+  });
+ } 
   saveFavorites(favs); 
   movies=getFavorites(); renderMovies();
 }
