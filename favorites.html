@@ -83,7 +83,9 @@ function toggleFavorite(movie){
   });
  } 
   saveFavorites(favs); 
-  movies=getSortedFavorites(); renderMovies();
+  movies=getSortedFavorites(); 
+  currentPage= 1;
+  renderMovies();
 }
 
 function renderMovies(){
@@ -126,6 +128,7 @@ document.getElementById('close-btn').onclick=()=>document.getElementById('modal'
 window.onclick=(e)=>{ if(e.target.id==="modal"){ document.getElementById('modal').style.display="none"; } }
 
 movies = getSortedFavorites();
+currentPage = 1;
 renderMovies();
 </script>
 </body>
