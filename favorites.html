@@ -54,20 +54,27 @@ header a{color:white;text-decoration:none;margin-left:20px;}
 </div>
 
 <script>
-let movies = getFavorites();
+let movies = [];
 let currentPage = 1;
 const perPage = 12;
 
 function getFavorites(){ const fav = localStorage.getItem('favorites'); return fav?JSON.parse(fav):[]; }
 function saveFavorites(favs){ localStorage.setItem('favorites',JSON.stringify(favs)); }
+function getSortedFavorites() {
+  return getFavorites()
+    .map(f => ({
+      ...f,
+      fav_time: f.fav_time || 0
+    }))
+    .sort((a, b) => b.fav_time - a.fav_time);
+}
 function isFavorite(id){ return getFavorites().some(f=>f.id===id); }
 function toggleFavorite(movie){ 
   let favs=getFavorites()
     .map(f => ({
       ...f,
       fav_time: f.fav_time || 0
-    }))
-    .sort((a, b) => b.fav_time - a.fav_time); 
+    })); 
   if(isFavorite(movie.id)){ favs=favs.filter(f=>f.id!==movie.id); } 
   else{
   favs.push({
@@ -76,7 +83,7 @@ function toggleFavorite(movie){
   });
  } 
   saveFavorites(favs); 
-  movies=getFavorites(); renderMovies();
+  movies=getSortedFavorites(); renderMovies();
 }
 
 function renderMovies(){
@@ -118,6 +125,7 @@ function showModal(movie){
 document.getElementById('close-btn').onclick=()=>document.getElementById('modal').style.display="none";
 window.onclick=(e)=>{ if(e.target.id==="modal"){ document.getElementById('modal').style.display="none"; } }
 
+movies = getSortedFavorites();
 renderMovies();
 </script>
 </body>
