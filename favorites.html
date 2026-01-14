@@ -38,6 +38,7 @@ header a{color:white;text-decoration:none;margin-left:20px;}
 </header>
 
 <section id="movie-list"></section>
+<div id="pagination"></div>
 
 <!-- Modal -->
 <div id="modal">
@@ -85,11 +86,30 @@ function renderMovies(){
 }
 
 function renderPagination(){
-  const pagination=document.createElement('div'); const pageDiv=document.getElementById('pagination')||document.createElement('div'); pageDiv.id='pagination'; document.body.appendChild(pageDiv);
-  pageDiv.innerHTML="";
-  const totalPages=Math.ceil(movies.length/perPage);
-  const prevBtn=document.createElement('button'); prevBtn.textContent="上一页"; prevBtn.disabled=currentPage===1; prevBtn.onclick=()=>{currentPage--;renderMovies();}; pageDiv.appendChild(prevBtn);
-  const nextBtn=document.createElement('button'); nextBtn.textContent="下一页"; nextBtn.disabled=currentPage===totalPages; nextBtn.onclick=()=>{currentPage++;renderMovies();}; pageDiv.appendChild(nextBtn);
+  const pagination = document.getElementById('pagination');
+  pagination.innerHTML = "";
+
+  const totalPages = Math.ceil(movies.length / perPage);
+  if (totalPages <= 1) return;
+
+  const prevBtn = document.createElement('button');
+  prevBtn.textContent = "上一页";
+  prevBtn.disabled = currentPage === 1;
+  prevBtn.onclick = () => {
+    currentPage--;
+    renderMovies();
+  };
+
+  const nextBtn = document.createElement('button');
+  nextBtn.textContent = "下一页";
+  nextBtn.disabled = currentPage === totalPages;
+  nextBtn.onclick = () => {
+    currentPage++;
+    renderMovies();
+  };
+
+  pagination.appendChild(prevBtn);
+  pagination.appendChild(nextBtn);
 }
 
 function showModal(movie){
