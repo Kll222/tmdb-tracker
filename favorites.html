@@ -24,11 +24,6 @@ header a{color:white;text-decoration:none;margin-left:20px;}
 #modal-content p{margin:5px 0;color:#444;}
 #close-btn{position:absolute;top:10px;right:15px;font-size:20px;cursor:pointer;color:#333;}
 #modal-fav-btn{margin-top:10px;padding:5px 10px;background:#333;color:white;border:none;border-radius:4px;cursor:pointer;}
-#pagination {
-  width: 100%;
-  text-align: center;
-  margin: 20px 0;
-}
 </style>
 </head>
 <body>
@@ -54,38 +49,19 @@ header a{color:white;text-decoration:none;margin-left:20px;}
 </div>
 
 <script>
-let movies = [];
+let movies = getFavorites();
 let currentPage = 1;
 const perPage = 12;
 
 function getFavorites(){ const fav = localStorage.getItem('favorites'); return fav?JSON.parse(fav):[]; }
 function saveFavorites(favs){ localStorage.setItem('favorites',JSON.stringify(favs)); }
-function getSortedFavorites() {
-  return getFavorites()
-    .map(f => ({
-      ...f,
-      fav_time: f.fav_time || 0
-    }))
-    .sort((a, b) => b.fav_time - a.fav_time);
-}
 function isFavorite(id){ return getFavorites().some(f=>f.id===id); }
 function toggleFavorite(movie){ 
-  let favs=getFavorites()
-    .map(f => ({
-      ...f,
-      fav_time: f.fav_time || 0
-    })); 
+  let favs=getFavorites(); 
   if(isFavorite(movie.id)){ favs=favs.filter(f=>f.id!==movie.id); } 
-  else{
-  favs.push({
-    ...movie,
-    fav_time: Date.now()
-  });
- } 
+  else{ favs.push(movie); } 
   saveFavorites(favs); 
-  movies=getSortedFavorites(); 
-  currentPage= 1;
-  renderMovies();
+  movies=getFavorites(); renderMovies();
 }
 
 function renderMovies(){
@@ -127,8 +103,6 @@ function showModal(movie){
 document.getElementById('close-btn').onclick=()=>document.getElementById('modal').style.display="none";
 window.onclick=(e)=>{ if(e.target.id==="modal"){ document.getElementById('modal').style.display="none"; } }
 
-movies = getSortedFavorites();
-currentPage = 1;
 renderMovies();
 </script>
 </body>
